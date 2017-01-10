@@ -37,4 +37,4 @@ local.properties
 ehthumbs.db
 Thumbs.db
 libs/
-src/main/res/drawable/
+src/weatherMain/res/drawable/
