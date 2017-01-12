@@ -1,5 +1,8 @@
 package com.example.alvarlega.trueweather;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import butterknife.ButterKnife;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
 
+    private Context mContext;
     private List<WeatherInfo> mWeatherInfos;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -31,7 +35,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         }
     }
 
-    public ForecastAdapter(List<WeatherInfo> weatherInfos) {
+    public ForecastAdapter(Context context, List<WeatherInfo> weatherInfos) {
+        mContext = context;
         mWeatherInfos = weatherInfos;
     }
 
@@ -44,14 +49,65 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ForecastAdapter.ViewHolder holder, int position) {
-        holder.mTemperature.setText(String.valueOf(mWeatherInfos.get(position).getWeatherMain().getTemp()) + "°C");
+
+        Double temperature = mWeatherInfos.get(position).getWeatherMain().getTemp();
+        holder.mTemperature.setText(String.valueOf(temperature) + "°C");
+        if (temperature >= 0) {
+            holder.mTemperature.setTextColor(Color.parseColor("#81C784"));
+        } else {
+            holder.mTemperature.setTextColor(Color.parseColor("#E57373"));
+        }
         String weatherString = mWeatherInfos.get(position).getWeather().get(0).getDescription().toUpperCase();
         holder.mWeather.setText(weatherString);
         holder.mDate.setText(mWeatherInfos.get(position).getDtTxt());
+        holder.mIcon.setImageDrawable(getWeatherIcon(mWeatherInfos.get(position).getWeather().get(0).getIcon()));
     }
 
     @Override
     public int getItemCount() {
         return mWeatherInfos.size();
+    }
+
+    private Drawable getWeatherIcon(String iconCode){
+        Drawable icon = null;
+        switch (iconCode) {
+            case "01d":
+            case "01n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_01);
+                break;
+            case "02d":
+            case "02n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_03);
+                break;
+            case "03d":
+            case "03n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_04);
+                break;
+            case "04d":
+            case "04n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_06);
+                break;
+            case "09d":
+            case "09n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_21);
+                break;
+            case "10d":
+            case "10n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_11);
+                break;
+            case "11d":
+            case "11n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_27);
+                break;
+            case "13d":
+            case "13n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_24);
+                break;
+            case "50d":
+            case "50n":
+                icon = mContext.getDrawable(R.drawable.ic_sw_10);
+                break;
+        }
+        return icon;
     }
 }
